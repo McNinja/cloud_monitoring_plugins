@@ -29,76 +29,48 @@ device_labels = ["/dev/xvd", "/dev/hd"]
 def is_readwrite(file_system_path):
     test_file_path = '{0}/temp_test'.format(file_system_path)
     try:
-	    file = open(test_file_path, 'w')
-	    file.close()
-	    os.remove(test_file_path)
-	except:
-		return False
+        file = open(test_file_path, 'w')
+        file.close()
+        os.remove(test_file_path)
+    except:
+        return False
     return True
 
 
-def get_mountpoint(device):
-    cmd = "mount | grep {0}".format(device)
-    mount_line = commands.getoutput(cmd)
-    if not mount_line:
-        return False
-    return mount_line.split()[2]
-
+def get_devices():
+    devices = []
+    with open("/etc/mtab") as f:
+        mounts = f.readlines()
+    for mount in mounts:
+        if any(x in mount for x in device_labels):
+            mount = mount.split()
+            devices.append((mount[0],mount[1]))
+    return devices
 
 def main():
-
-    disks = []
-    partitions = []
     ro_devices = 0
-    unmounted_devices = 0
+    ro_list = []
 
-
-    for label in device_labels:
-        disk_glob = "".join((label, "[a-zz]"))
-        disks += [disk for disk in glob.glob(disk_glob)]
-
-        partition_glob = "".join((label, "[a-zz][0-256]"))
-        partitions += [part for part in glob.glob(partition_glob)]
-
-    for part in partitions:
-        disks.remove(part.rstrip("0123456789"))
-    devices = partitions + disks
-    print("found devices: {0}".format(devices))
-
-    # Ignore Swap Partitions
-    with open("/proc/swaps") as f:
-        swaps = [swap.split()[0] for swap in f.readlines()[1:]]
-
-    for swap in swaps:
-        if swap in devices:
-            devices.remove(swap)
-
-    for device in devices:
-        
+    for device in get_devices():
+    	drive = device[0]
+    	mountpoint = device[1]
         # Generate escaped device name for metrics
-        escaped_device = device.split("/")[-1]
-
-        # Test and report if device is mounted
-        metric = "metric {0}_mounted int32 {1}"
-        mountpoint = get_mountpoint(device)
-        if not mountpoint:
-            unmounted_devices +=1
-            print(metric.format(escaped_device, "0"))
-            continue
-        print(metric.format(escaped_device, "1"))
+        escaped_device = drive.split("/")[-1]
 
         # Test and report if device is writeable
         metric = "metric {0}_writeable int32 {1}"
         writeable = is_readwrite(mountpoint)
         if not writeable:
             ro_devices +=1
+            ro_list.append(escaped_device)
             print(metric.format(escaped_device, "0"))
             continue
         print(metric.format(escaped_device, "1"))
 
+    ro_list = ",".join(ro_list)
     print("metric ro_devices int32 {0}".format(ro_devices))
-    print("metric unmounted_devices int32 {0}".format(unmounted_devices))
-    print("metric total_devices int32 {0}".format(len(devices)))
+    print("metric ro_list string {0}".format(ro_list))
+
 
 if __name__ == "__main__":
     main()
