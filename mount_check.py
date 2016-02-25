@@ -20,8 +20,6 @@ limitations under the License.
 
 """
 import os
-import glob
-import commands
 
 device_labels = ["/dev/xvd", "/dev/hd"]
 
@@ -44,16 +42,17 @@ def get_devices():
     for mount in mounts:
         if any(x in mount for x in device_labels):
             mount = mount.split()
-            devices.append((mount[0],mount[1]))
+            devices.append((mount[0], mount[1]))
     return devices
+
 
 def main():
     ro_devices = 0
     ro_list = []
 
     for device in get_devices():
-    	drive = device[0]
-    	mountpoint = device[1]
+        drive = device[0]
+        mountpoint = device[1]
         # Generate escaped device name for metrics
         escaped_device = drive.split("/")[-1]
 
@@ -61,7 +60,7 @@ def main():
         metric = "metric {0}_writeable int32 {1}"
         writeable = is_readwrite(mountpoint)
         if not writeable:
-            ro_devices +=1
+            ro_devices += 1
             ro_list.append(escaped_device)
             print(metric.format(escaped_device, "0"))
             continue
@@ -74,13 +73,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-
-
-
-
-
-
-
-
-
