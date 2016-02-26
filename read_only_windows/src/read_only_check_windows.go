@@ -1,5 +1,5 @@
-// Rackspace Cloud Monitoring plugin to check port, particularly
-// useful for services that aren't accessible to a remote port check.
+// Rackspace Cloud Monitoring plugin to check for a read-only filesystems
+// useful for Cloud Block Storage Volumess
 //
 // Copyright 2016 Russell Troxel <russell.troxel@rackspace.com>
 //
@@ -42,7 +42,7 @@ func get_devices() []string {
 }
 
 func test_rw(d string) int {
-	p := strings.Join([]string{d, `\rax_tmp_test`}, "")
+	p := strings.Join([]string{d, `\raxmon_tmp_test`}, "")
 
 	_, err := os.Create(p)
 	if err != nil {
@@ -52,11 +52,9 @@ func test_rw(d string) int {
 	}
 }
 
-func main() {
+func test_routine(drives []string) {
 	ro_devices := 0
 	var ro_list []string
-
-	drives := get_devices()
 
 	metric := "metric %s_writeable %d"
 	for i := 0; i < len(drives); i++ {
@@ -78,4 +76,9 @@ func main() {
 
 	fmt.Println(fmt.Sprintf("metric ro_devices %d", ro_devices))
 	fmt.Println(fmt.Sprintf("metric ro_list %s", list))
+}
+
+func main() {
+	drives := get_devices()
+	test_routine(drives)
 }

@@ -1,8 +1,7 @@
 #!/usr/bin/env python
 """
-
-Rackspace Cloud Monitoring plugin to check port, particularly
-useful for services that aren't accessible to a remote port check.
+Rackspace Cloud Monitoring plugin to check for a read-only
+filesystems, useful for monitoring Cloud Block Storage Volumess
 
 Copyright 2016 Russell Troxel <russell.troxel@rackspace.com>
 
