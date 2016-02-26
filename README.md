@@ -19,11 +19,11 @@ cd /usr/lib/rackspace-monitoring-agent/plugins/ && wget https://raw.githubuserco
 
 4. From the entity screen, scroll down until you see the "Create Check" button:
 
-![Create Check Example](https://github.com/adam-p/markdown-here/raw/master/images/create_check.png "Moniitoring Checks")
+![Create Check Example](https://raw.githubusercontent.com/swyytch/cloud_monitoring_plugins/master/images/create_check.png "Moniitoring Checks")
 
 5. Configure your check with the following criteria:
 
-![Create Check Dialog](https://github.com/adam-p/markdown-here/raw/master/images/check_dialog.png "Create Check")
+![Create Check Dialog](https://raw.githubusercontent.com/swyytch/cloud_monitoring_plugins/master/images/check_dialog.png "Create Check")
 
 5. Once the Check is created, click the Gear Icon next to the check name, and select "Add Alarm".
 
@@ -37,5 +37,5 @@ if (metric["ro_devices"] != 0) {
 
 7. Test it! If you have a read-only filesystem (You can simulate this failure by running ```mount -o ro,remount {mountpoint)``` but be aware this will cause your filesystem to *actually* go read only.) If you have a read-only filesystem, you should see the following alarm text:
 
-![Failed Alarm Output](https://github.com/adam-p/markdown-here/raw/master/images/alarm_test.png "Failed Alarm")
+![Failed Alarm Output](https://raw.githubusercontent.com/swyytch/cloud_monitoring_plugins/master/images/alarm_test.png "Failed Alarm")
 
