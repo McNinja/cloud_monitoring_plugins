@@ -12,7 +12,7 @@ These checks determine whether any disks currently attached to the entity have g
 
 1. Download the desired check to the custom plugin directory on your cloud server:
 ```bash
-cd /usr/lib/rackspace-monitoring-agent/plugins/ && wget https://raw.githubusercontent.com/swyytch/cloud_monitoring_plugins/master/read_only/read_only_check_linux.py
+cd /usr/lib/rackspace-monitoring-agent/plugins/ && wget https://raw.githubusercontent.com/swyytch/cloud_monitoring_plugins/master/read_only_linux/read_only_check_linux.py
 ```
 
 3. Head to https://intelligence.rackspace.com and click the name of the entity for which you would like to create this check
